@@ -17,6 +17,8 @@
 
 # 2.Zapisać je do bazy danych, w tabelce o swoim nazwisku.
 
+#5 Lublin
+
 install.packages("RSelenium")
 install.packages("rvest")
 install.packages("dplyr")
@@ -39,6 +41,7 @@ pageFromSelenium <- remDr$getPageSource()[[1]] %>% rvest::read_html()
 przyciski <- pageFromSelenium%>%html_elements(".eoupkm71.css-190hi89.e11e36i3")
 ileStron <-as.numeric(przyciski[ (length(przyciski))-1 ]%>% html_text())
 wektorLinkow<-c()
+
 for ( i in 1:ileStron){
   urll<- paste0("https://www.otodom.pl/pl/oferty/sprzedaz/mieszkanie/lublin?areaMax=38&page=",i)
   remDr$navigate(urll)
@@ -85,7 +88,7 @@ zrobWiersz<- function(w,wektorLinkow,miasto,data,remDr){
   df1
 }
 
-miastaDF<-NULL
+LublinDF<-NULL
 liczbaLinkow<-length(wektorLinkow)
 for( l in 1:liczbaLinkow ){
   skip<-FALSE
@@ -99,10 +102,10 @@ for( l in 1:liczbaLinkow ){
   if(skip){next}
   print(names(temp))
   if ( !any(is.na(names(temp))) ){
-    if( is.null(miastaDF) )
-      miastaDF<-temp
+    if( is.null(LublinDF) )
+      LublinDF<-temp
     else{
-      miastaDF<-smartbind(miastaDF,temp )
+      LublinDF<-smartbind(LublinDF,temp )
     }
   }
 }
@@ -111,7 +114,7 @@ install.packages(c("DBI","RMySQL","rstudioapi"))
 library(DBI)
 library(RMySQL)
 library(rstudioapi)
-View(miastaDF)
+View(LublinDF)
 con <- DBI::dbConnect(RMySQL::MySQL(),
                       encoding ="UTF-8",
                       host = "51.83.185.240",
@@ -122,9 +125,9 @@ con <- DBI::dbConnect(RMySQL::MySQL(),
 
 dbGetQuery(con,'SET NAMES utf8')
 dbGetQuery(con,'set character set "utf8"')
-dbWriteTable(con, "biedrzycka_miasta", miastaDF, append = FALSE,overwrite=TRUE)
+dbWriteTable(con, "biedrzycka_Lublin", LublinDF, append = FALSE,overwrite=TRUE)
 
 dbListTables(con)
-biedrzycka<- tbl(con,"biedrzycka_miasta")
+biedrzycka<- tbl(con,"biedrzycka_Lublin")
 biedrzycka%>%select(cena)
 dbDisconnect(con)

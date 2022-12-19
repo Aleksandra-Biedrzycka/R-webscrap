@@ -17,6 +17,8 @@
 
 # 2.Zapisać je do bazy danych, w tabelce o swoim nazwisku.
 
+#2 Gdańsk
+
 install.packages("RSelenium")
 install.packages("rvest")
 install.packages("dplyr")
@@ -39,8 +41,9 @@ pageFromSelenium <- remDr$getPageSource()[[1]] %>% rvest::read_html()
 przyciski <- pageFromSelenium%>%html_elements(".eoupkm71.css-190hi89.e11e36i3")
 ileStron <-as.numeric(przyciski[ (length(przyciski))-1 ]%>% html_text())
 wektorLinkow<-c()
+
 for ( i in 1:ileStron){
-  urll<- paste0("https://www.otodom.pl/pl/oferty/sprzedaz/mieszkanie/lublin?areaMax=38&page=",i)
+  urll<- paste0("https://www.otodom.pl/pl/oferty/sprzedaz/mieszkanie/gdansk?areaMax=38&page=",i)
   remDr$navigate(urll)
   Sys.sleep(1)
   webElement<- remDr$findElement("css","body")
@@ -56,7 +59,7 @@ for ( i in 1:ileStron){
 }
 wektorLinkow<-unique(wektorLinkow)
 w<-1
-miasto<-"lublin"
+miasto<-"gdansk"
 data<-"19.12.2022"
 zrobWiersz<- function(w,wektorLinkow,miasto,data,remDr){
   urll<- paste0("https://www.otodom.pl",wektorLinkow[w])
@@ -85,12 +88,12 @@ zrobWiersz<- function(w,wektorLinkow,miasto,data,remDr){
   df1
 }
 
-miastaDF<-NULL
+GdanskDF<-NULL
 liczbaLinkow<-length(wektorLinkow)
 for( l in 1:liczbaLinkow ){
   skip<-FALSE
   tryCatch(
-    temp<-zrobWiersz(l,wektorLinkow,"Lublin",data,remDr=remDr),
+    temp<-zrobWiersz(l,wektorLinkow,"Gdansk",data,remDr=remDr),
     error=function(e){
       print(e)
       skip<<-TRUE
@@ -99,10 +102,10 @@ for( l in 1:liczbaLinkow ){
   if(skip){next}
   print(names(temp))
   if ( !any(is.na(names(temp))) ){
-    if( is.null(miastaDF) )
-      miastaDF<-temp
+    if( is.null(GdanskDF) )
+      GdanskDF<-temp
     else{
-      miastaDF<-smartbind(miastaDF,temp )
+      GdanskDF<-smartbind(GdanskDF,temp )
     }
   }
 }
@@ -111,7 +114,7 @@ install.packages(c("DBI","RMySQL","rstudioapi"))
 library(DBI)
 library(RMySQL)
 library(rstudioapi)
-View(miastaDF)
+View(GdanskDF)
 con <- DBI::dbConnect(RMySQL::MySQL(),
                       encoding ="UTF-8",
                       host = "51.83.185.240",
@@ -122,9 +125,11 @@ con <- DBI::dbConnect(RMySQL::MySQL(),
 
 dbGetQuery(con,'SET NAMES utf8')
 dbGetQuery(con,'set character set "utf8"')
-dbWriteTable(con, "biedrzycka_miasta", miastaDF, append = FALSE,overwrite=TRUE)
+dbWriteTable(con, "biedrzycka_Gdansk", GdanskDF, append = FALSE,overwrite=TRUE)
+
+#dbRemoveTable(con, "biedrzycka_Gdanskz", GdanskDF, append = FALSE,overwrite=TRUE)
 
 dbListTables(con)
-biedrzycka<- tbl(con,"biedrzycka_miasta")
+biedrzycka<- tbl(con,"biedrzycka_Gdansk")
 biedrzycka%>%select(cena)
 dbDisconnect(con)

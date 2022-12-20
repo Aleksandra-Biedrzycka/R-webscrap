@@ -125,7 +125,7 @@ con <- DBI::dbConnect(RMySQL::MySQL(),
 
 dbGetQuery(con,'SET NAMES utf8')
 dbGetQuery(con,'set character set "utf8"')
-dbWriteTable(con, "biedrzycka_Lodz", LodznDF, append = FALSE,overwrite=TRUE)
+dbWriteTable(con, "biedrzycka_Lodz", LodzDF, append = FALSE,overwrite=TRUE)
 
 dbListTables(con)
 biedrzycka<- tbl(con,"biedrzycka_Lodz")

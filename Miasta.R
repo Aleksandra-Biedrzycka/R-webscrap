@@ -2,7 +2,7 @@
 
 #   1. Zebrać dane dotyczące ofert sprzedaży  miast, za pomocą web scrappingu.
 # Miasta takie jak w linku:
-#   https://www.bankier.pl/wiadomosc/Ceny-ofertowe-wynajmu-mieszkan-sierpien-2022-Raport-Bankier-pl-8394772.html
+#   https://www.link.pl
 
 #1 Bydgoszcz
 #2 Gdańsk

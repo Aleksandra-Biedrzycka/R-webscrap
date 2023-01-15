@@ -43,7 +43,7 @@ ileStron <-as.numeric(przyciski[ (length(przyciski))-1 ]%>% html_text())
 wektorLinkow<-c()
 
 for ( i in 1:ileStron){
-  urll<- paste0("https://www.otodom.pl/pl/oferty/sprzedaz/mieszkanie/bydgoszcz?areaMax=38&page=",i)
+  urll<- paste0("https://www.portal.pl/pl/oferty/sprzedaz/mieszkanie/bydgoszcz",i)
   remDr$navigate(urll)
   Sys.sleep(1)
   webElement<- remDr$findElement("css","body")
@@ -109,7 +109,7 @@ for( l in 1:liczbaLinkow ){
     }
   }
 }
-# "!r23_pjatK_23!"
+
 install.packages(c("DBI","RMySQL","rstudioapi"))
 library(DBI)
 library(RMySQL)
@@ -117,10 +117,10 @@ library(rstudioapi)
 View(BydgoszczDF)
 con <- DBI::dbConnect(RMySQL::MySQL(),
                       encoding ="UTF-8",
-                      host = "51.83.185.240",
+                      host = "11.11.111.111",
                       user = "student",
                       dbname = "rzajecia23",
-                      password ="!r23_pjatK_23!"#rstudioapi::askForPassword("Database password")
+                      password ="haslo"#rstudioapi::askForPassword("Database password")
 )
 
 dbGetQuery(con,'SET NAMES utf8')
